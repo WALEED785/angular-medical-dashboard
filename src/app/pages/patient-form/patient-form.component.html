@@ -1,0 +1,108 @@
+<div class="patient-form-wrapper">
+  <div class="patient-form-container">
+    <div class="form-header">
+      <div class="doctor-info">
+        <span class="doctor-name">Dr. Thomas Victor Kerola</span>
+        <span class="hospital-info">Helsinki Hospital, Cardiology Department</span>
+      </div>
+      <div class="datetime-info">
+        <span class="date">29/10/2024</span>
+        <span class="time">14:49</span>
+        <mat-icon class="edit-icon">edit</mat-icon>
+      </div>
+    </div>
+
+    <form [formGroup]="patientForm" class="patient-form">
+      <div class="form-section patient-name-section">
+        <label class="form-label">Patient Full Name:</label>
+        <div class="name-input-container">
+          <input type="text" class="patient-name-input" formControlName="patientName"
+            placeholder="Enter patient's full name">
+        </div>
+      </div>
+
+      <div class="form-row two-columns">
+        <div class="form-field">
+          <label class="form-label">Date of Birth:</label>
+          <input type="date" class="form-input" formControlName="birthDate">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Patient ID:</label>
+          <input type="text" class="form-input" formControlName="personalId" placeholder="Enter patient ID">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Appointment Type:</label>
+        <div class="select-container">
+          <mat-form-field appearance="outline" class="custom-select">
+            <mat-select formControlName="appointmentType" placeholder="Select appointment type..."
+              panelClass="relative-dropdown">
+              <mat-option *ngFor="let type of appointmentTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix class="mic-icon">mic</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Reason for Visit:</label>
+        <div class="input-container">
+          <input type="text" class="form-input full-width" formControlName="visitReason"
+            placeholder="Enter reason for visit...">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Status:</label>
+        <div class="radio-group">
+          <mat-radio-group formControlName="visitStatus" class="status-radio-group">
+            <mat-radio-button value="draft" class="radio-button">Draft</mat-radio-button>
+            <mat-radio-button value="completed" class="radio-button">Completed</mat-radio-button>
+            <mat-radio-button value="approved" class="radio-button">Approved</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Doctor:</label>
+        <div class="readonly-field">
+          <span>Dr. Thomas Victor Kerola</span>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Appointment Date and Time:</label>
+        <div class="datetime-row">
+          <div class="date-field">
+            <input type="text" class="form-input" formControlName="appointmentDate" value="29/10/2024">
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </div>
+          <div class="time-field">
+            <span class="time-display">14:49</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Additional Notes:</label>
+        <div class="textarea-container">
+          <textarea class="form-textarea" formControlName="notes" placeholder="Enter additional notes..."
+            rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="onCancel()">
+          Close
+        </button>
+        <button type="submit" class="btn-primary" (click)="onSave()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Create Appointment</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="dashboard-wrapper">
+  <div class="dashboard-container">
+    <div class="navigation-grid">
+      <div *ngFor="let item of navigationItems" class="nav-card" (click)="onNavigationClick(item)">
+        <mat-card>
+          <div *ngIf="item.hasNotification" class="notification-badge">
+            {{ item.notificationCount || '1' }}
+          </div>
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="work-list-section">
+        <div class="section-header">
+          <div class="work-list-title">
+            <h2>Work List</h2>
+            <button class="nav-button" (click)="goToPrevious()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+          </div>
+          <div class="calendar-info">
+            <mat-icon>calendar_today</mat-icon>
+            <span>Calendar</span>
+            <button class="nav-button" (click)="goToNext()">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <mat-accordion class="appointments-accordion">
+          <mat-expansion-panel *ngFor="let appointment of appointments$ | async; trackBy: trackByAppointmentId"
+            class="appointment-panel" [expanded]="expandedAppointment === appointment.id"
+            (opened)="expandedAppointment = appointment.id" (closed)="expandedAppointment = null">
+
+            <mat-expansion-panel-header class="appointment-header">
+              <mat-panel-title class="appointment-title">
+                <div class="appointment-info">
+                  <div class="time-badge">{{ formatTime(appointment.startTime) }}</div>
+                  <div class="patient-details">
+                    <div class="patient-name">{{ appointment.patientName }} - {{ appointment.patientPersonalId }}</div>
+                    <div class="patient-id">{{ appointment.appointmentType }}</div>
+                  </div>
+                  <div class="appointment-type" [ngClass]="getAppointmentTypeClass(appointment.appointmentType)">
+                    {{ appointment.appointmentType }}
+                  </div>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="appointment-content">
+              <div class="appointment-description">
+                {{
+                appointment.notes || getDefaultDescription(appointment.appointmentType)
+                }}
+              </div>
+              <div class="appointment-actions">
+                <button mat-raised-button color="primary" class="action-button primary"
+                  (click)="onAppointmentAction(appointment, 'call')">
+                  <mat-icon>{{ getPrimaryActionIcon(appointment.appointmentType) }}</mat-icon>
+                  {{ getPrimaryActionText(appointment.appointmentType) }}
+                </button>
+                <button mat-stroked-button class="action-button" (click)="onOpenPatient()">
+                  <mat-icon>person</mat-icon>
+                  Open Patient
+                </button>
+                <button mat-stroked-button class="action-button" (click)="onCreateVisit()">
+                  <mat-icon>note_add</mat-icon>
+                  Visit
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+      <div class="sidebar">
+        <div class="quick-actions-section">
+          <div class="quick-actions-header">
+            <h3>Quick Actions</h3>
+            <button mat-icon-button class="add-action-btn" (click)="addQuickAction()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="quick-actions-grid">
+            <div *ngFor="let action of quickActions" class="quick-action" (click)="onQuickActionClick(action)">
+              <mat-icon>{{ action.icon }}</mat-icon>
+              <span>{{ action.label }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="patient-search-section">
+          <h3>Recent Patients</h3>
+          <mat-form-field class="search-field">
+            <mat-label>Search by patient name or ID...</mat-label>
+            <input matInput [(ngModel)]="searchTerm" (input)="onSearchPatients()">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <div class="patient-list">
+            <div *ngFor="let patient of filteredPatients$ | async" class="patient-item" (click)="onPatientClick()">
+              <div class="patient-item-name">{{ patient.name }}</div>
+              <div class="patient-item-id">{{ patient.personalId }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

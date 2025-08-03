@@ -1,0 +1,9 @@
+.container {
+  max-width: 1200px;
+}
+
+::ng-deep {
+  .mat-toolbar {
+    background-color: white !important;
+  }
+}
